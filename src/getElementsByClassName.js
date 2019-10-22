@@ -5,12 +5,27 @@
 
 // But instead we're going to implement it from scratch:
 
-var getElementsByClassName = function(className) {
+var getElementsByClassName = function(className, currentNode) {
   // create an output array to push matching nodes up to
   var outputArr = [];
-  // iterate over the body of the HTML document
-  document.body.each('html', function() {
-    // push any nodes that match "className" to the output array
-  })
+  // define the currentNode parameter
+  if (currentNode === undefined) {
+    currentNode = document.body;
+  } else {
+    currentNode = currentNode;
+  }
+  // if the current node has a classlist and that classList includes the class name we are looking for
+  if (currentNode.classList && currentNode.classList.contains(className)) {
+    // push the node to the output array
+    outputArr.push(currentNode);
+  }
+  // if the current node has children
+  if (currentNode.childNodes) {
+    for (var i = 0; i < currentNode.childNodes.length; i++) {
+      // recurse getElementsByClassName on the children
+      outputArr = outputArr.concat(getElementsByClassName(className, currentNode.childNodes[i]));
+    }
+  }
   // return output array
+  return outputArr;
 };
